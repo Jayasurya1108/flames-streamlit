@@ -12,7 +12,7 @@ creds = Credentials.from_service_account_info(
     scopes=scope
 )
 client = gspread.authorize(creds)
-sheet = client.open("Flames_Data").worksheet("Sheet1")
+sheet = client.open_by_key("1JATNl9u8ol0Wphz2STyWofxhHUaO8olMAZ7amnIq3eI").worksheet("Sheet1")
 
 st.markdown(
     """
