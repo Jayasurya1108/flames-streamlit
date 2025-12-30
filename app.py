@@ -1,13 +1,24 @@
 import streamlit as st
+import gspread
+from google.oauth2.service_account import Credentials
+from datetime import datetime
 
 st.set_page_config(page_title="FLAMES Calculator", page_icon="🔥", layout="centered")
+
+# ---- Google Sheets Setup ----
+scope = ["https://www.googleapis.com/auth/spreadsheets"]
+creds = Credentials.from_service_account_info(
+    st.secrets["gcp_service_account"],
+    scopes=scope
+)
+client = gspread.authorize(creds)
+sheet = client.open("Flames_Data").worksheet("Sheet1")
 
 st.markdown(
     """
     <style>
     .stApp {
         background: linear-gradient(135deg, #2193b0, #6dd5ed);
-
     }
     .title {
         text-align: center;
@@ -76,6 +87,9 @@ if st.button("✨ Calculate FLAMES ✨", use_container_width=True):
             'E': '⚔️ Enemy',
             'S': '👫 Sister'
         }
+
+        time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        sheet.append_row([n1, n2, d[s], time])
 
         st.markdown(
             f"<div class='result'>💫 Result: {d[s]}</div>",
